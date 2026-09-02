@@ -43,6 +43,38 @@ function App() {
     )
     scene.add(sphere)
 
+    const starCount = 4000
+    const starPositions = new Float32Array(starCount * 3)
+
+    for (let index = 0; index < starCount; index += 1) {
+      const radius = THREE.MathUtils.lerp(15, 45, Math.pow(Math.random(), 0.65))
+      const theta = Math.random() * Math.PI * 2
+      const phi = Math.acos(2 * Math.random() - 1)
+      const sinPhi = Math.sin(phi)
+
+      starPositions[index * 3] = radius * sinPhi * Math.cos(theta)
+      starPositions[index * 3 + 1] = radius * Math.cos(phi)
+      starPositions[index * 3 + 2] = radius * sinPhi * Math.sin(theta)
+    }
+
+    const starGeometry = new THREE.BufferGeometry()
+    starGeometry.setAttribute(
+      'position',
+      new THREE.BufferAttribute(starPositions, 3),
+    )
+
+    const starMaterial = new THREE.PointsMaterial({
+      color: 0xffffff,
+      size: 0.11,
+      sizeAttenuation: true,
+      transparent: true,
+      opacity: 0.9,
+      depthWrite: false,
+    })
+
+    const stars = new THREE.Points(starGeometry, starMaterial)
+    scene.add(stars)
+
     const resize = () => {
       const width = container.clientWidth
       const height = container.clientHeight
@@ -58,6 +90,8 @@ function App() {
 
     const render = () => {
       sphere.rotation.y += 0.002
+      stars.rotation.y += 0.00015
+      stars.rotation.x += 0.00004
       controls.update()
       renderer.render(scene, camera)
     }
@@ -89,6 +123,8 @@ function App() {
       controls.dispose()
       sphere.geometry.dispose()
       sphere.material.dispose()
+      stars.geometry.dispose()
+      stars.material.dispose()
       renderer.dispose()
 
       if (renderer.domElement.parentNode === container) {
@@ -101,11 +137,6 @@ function App() {
     <main className="app-shell">
       <div ref={canvasContainerRef} className="scene-container" aria-label="Three.jsの3Dシーン">
         {error && <p className="scene-error">{error}</p>}
-      </div>
-      <div className="scene-overlay">
-        <p className="eyebrow">THREE.JS / WEBGPU</p>
-        <h1>宇宙のはじまり</h1>
-        <p>ドラッグで視点を回転、ホイールでズームできます。</p>
       </div>
     </main>
   )
