@@ -1,8 +1,9 @@
 import * as THREE from 'three/webgpu'
+import { DISPLAY_DISTANCE_SCALE } from './displayScale'
 
 const STAR_COUNT = 4000
-const MIN_STAR_RADIUS = 15
-const MAX_STAR_RADIUS = 45
+const MIN_STAR_DISTANCE = 15 * DISPLAY_DISTANCE_SCALE
+const MAX_STAR_DISTANCE = 45 * DISPLAY_DISTANCE_SCALE
 
 export function createStars(): THREE.Points<
   THREE.BufferGeometry,
@@ -29,8 +30,8 @@ function createStarPositions(): Float32Array {
 
   for (let index = 0; index < STAR_COUNT; index += 1) {
     const radius = THREE.MathUtils.lerp(
-      MIN_STAR_RADIUS,
-      MAX_STAR_RADIUS,
+      MIN_STAR_DISTANCE,
+      MAX_STAR_DISTANCE,
       Math.pow(Math.random(), 0.65),
     )
     const theta = Math.random() * Math.PI * 2
