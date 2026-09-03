@@ -4,6 +4,7 @@ import { createCamera, createScene } from './createScene'
 import { createPlanet } from './createPlanet'
 import { createRenderer } from './createRenderer'
 import { createStars } from './createStars'
+import { PLANET_CATALOG } from './planetCatalog'
 import type { OrbitControls } from 'three/addons/controls/OrbitControls.js'
 
 export interface SpaceScene {
@@ -20,7 +21,7 @@ export function createSpaceScene(container: HTMLElement): SpaceScene {
   const camera = createCamera()
   const renderer = createRenderer(container)
   const controls = createControls(camera, renderer.domElement)
-  const planet = createPlanet()
+  const planet = createPlanet(PLANET_CATALOG.earth)
   const stars = createStars()
 
   scene.add(planet, stars)
