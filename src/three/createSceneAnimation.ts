@@ -17,6 +17,7 @@ export function createSceneAnimation({
   renderer,
   controls,
   stars,
+  sun,
 }: SpaceScene): () => void {
   let previousTime: number | undefined
 
@@ -27,6 +28,7 @@ export function createSceneAnimation({
     const deltaSeconds = Math.min(Math.max(rawDeltaSeconds, 0), MAX_DELTA_SECONDS)
     const elapsedDisplaySeconds = deltaSeconds * DISPLAY_TIME_SCALE
 
+    sun.advanceTime(elapsedDisplaySeconds)
     stars.rotation.y +=
       STARS_ROTATION_SPEED_Y_PER_SECOND * elapsedDisplaySeconds
     stars.rotation.x +=

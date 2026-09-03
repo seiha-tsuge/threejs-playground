@@ -9,7 +9,7 @@ import {
 import { createPlanet } from './createPlanet'
 import { createRenderer } from './createRenderer'
 import { createStars } from './createStars'
-import { createSun } from './createSun'
+import { createSun, type SunMesh } from './createSun'
 import { createSunLight } from './createSunLight'
 import { PLANET_CATALOG } from './planetCatalog'
 import type { OrbitControls } from 'three/addons/controls/OrbitControls.js'
@@ -22,7 +22,7 @@ export interface SpaceScene {
   solarSystem: THREE.Group
   orbitAnchors: OrbitAnchors
   planet: THREE.Mesh<THREE.SphereGeometry, THREE.MeshStandardMaterial>
-  sun: THREE.Mesh<THREE.SphereGeometry, THREE.MeshStandardMaterial>
+  sun: SunMesh
   sunLight: THREE.PointLight
   stars: THREE.Points<THREE.BufferGeometry, THREE.PointsMaterial>
 }
