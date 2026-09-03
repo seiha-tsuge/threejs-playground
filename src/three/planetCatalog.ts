@@ -16,7 +16,8 @@ export type PlanetId =
 
 /**
  * 画面表示に使う惑星データ。
- * 半径は地球半径を1とした相対値、軌道半径は天文単位を1とした相対値。
+ * 表示半径は地球半径を1とした値に DISPLAY_RADIUS_SCALE を適用し、
+ * 軌道半径は天文単位を1とした値に DISPLAY_DISTANCE_SCALE を適用する。
  */
 export interface PlanetData {
   readonly id: PlanetId
