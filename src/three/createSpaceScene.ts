@@ -17,7 +17,7 @@ export interface SpaceScene {
   controls: OrbitControls
   solarSystem: THREE.Group
   orbitAnchors: OrbitAnchors
-  sun: THREE.Mesh<THREE.SphereGeometry, THREE.MeshBasicMaterial>
+  sun: THREE.Mesh<THREE.SphereGeometry, THREE.MeshStandardMaterial>
   stars: THREE.Points<THREE.BufferGeometry, THREE.PointsMaterial>
 }
 
