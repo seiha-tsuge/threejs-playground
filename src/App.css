@@ -17,40 +17,6 @@
   height: 100%;
 }
 
-.scene-overlay {
-  position: relative;
-  z-index: 1;
-  width: min(100% - 48px, 1120px);
-  margin: 0 auto;
-  padding-top: clamp(48px, 11vh, 112px);
-  pointer-events: none;
-}
-
-.eyebrow {
-  margin: 0 0 12px;
-  color: #38bdf8;
-  font-size: 0.75rem;
-  font-weight: 700;
-  letter-spacing: 0.2em;
-}
-
-.scene-overlay h1 {
-  max-width: 520px;
-  margin: 0;
-  color: #f8fafc;
-  font-size: clamp(2.5rem, 7vw, 5.75rem);
-  font-weight: 500;
-  letter-spacing: -0.06em;
-  line-height: 0.95;
-  white-space: nowrap;
-}
-
-.scene-overlay p:last-child {
-  margin-top: 24px;
-  color: #94a3b8;
-  font-size: 0.95rem;
-}
-
 .scene-error {
   position: absolute;
   top: 50%;
@@ -65,10 +31,4 @@
   background: rgba(69, 10, 10, 0.92);
   color: #fecaca;
   text-align: center;
-}
-
-@media (max-width: 640px) {
-  .scene-overlay {
-    width: min(100% - 32px, 1120px);
-  }
 }
