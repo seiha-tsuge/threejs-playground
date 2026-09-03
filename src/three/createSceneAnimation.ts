@@ -5,6 +5,7 @@ const PLANET_ROTATION_SPEED = 0.002
 const STARS_ROTATION_SPEED_Y = 0.00015
 const STARS_ROTATION_SPEED_X = 0.00004
 const REFERENCE_FRAME_RATE = 60
+const MAX_DELTA_SECONDS = 0.1
 
 const PLANET_ROTATION_SPEED_PER_SECOND =
   PLANET_ROTATION_SPEED * REFERENCE_FRAME_RATE
@@ -24,9 +25,10 @@ export function createSceneAnimation({
   let previousTime: number | undefined
 
   return (time = performance.now()) => {
-    const deltaSeconds =
+    const rawDeltaSeconds =
       previousTime === undefined ? 1 / REFERENCE_FRAME_RATE : (time - previousTime) / 1000
     previousTime = time
+    const deltaSeconds = Math.min(Math.max(rawDeltaSeconds, 0), MAX_DELTA_SECONDS)
     const elapsedDisplaySeconds = deltaSeconds * DISPLAY_TIME_SCALE
 
     planet.rotation.y +=
