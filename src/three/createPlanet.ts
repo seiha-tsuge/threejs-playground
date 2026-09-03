@@ -3,15 +3,13 @@ import type { PlanetData } from './planetCatalog'
 
 export function createPlanet(planet: PlanetData): THREE.Mesh<
   THREE.SphereGeometry,
-  THREE.MeshBasicMaterial
+  THREE.MeshStandardMaterial
 > {
   return new THREE.Mesh(
     new THREE.SphereGeometry(planet.displayRadius, 64, 32),
-    new THREE.MeshBasicMaterial({
+    new THREE.MeshStandardMaterial({
       color: planet.color,
-      wireframe: true,
-      transparent: true,
-      opacity: 0.75,
+      roughness: 0.85,
     }),
   )
 }
