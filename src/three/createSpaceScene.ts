@@ -1,6 +1,11 @@
 import * as THREE from 'three/webgpu'
 import { createControls } from './createControls'
 import { createCamera, createScene } from './createScene'
+import {
+  createOrbitAnchors,
+  getOrbitAnchor,
+  type OrbitAnchors,
+} from './createOrbitAnchors'
 import { createPlanet } from './createPlanet'
 import { createRenderer } from './createRenderer'
 import { createStars } from './createStars'
@@ -13,6 +18,7 @@ export interface SpaceScene {
   renderer: THREE.WebGPURenderer
   controls: OrbitControls
   solarSystem: THREE.Group
+  orbitAnchors: OrbitAnchors
   planet: THREE.Mesh<THREE.SphereGeometry, THREE.MeshBasicMaterial>
   stars: THREE.Points<THREE.BufferGeometry, THREE.PointsMaterial>
 }
@@ -23,13 +29,25 @@ export function createSpaceScene(container: HTMLElement): SpaceScene {
   const renderer = createRenderer(container)
   const controls = createControls(camera, renderer.domElement)
   const solarSystem = new THREE.Group()
+  const orbitAnchors = createOrbitAnchors()
   const planet = createPlanet(PLANET_CATALOG.earth)
   const stars = createStars()
 
-  solarSystem.add(planet)
+  planet.position.x = PLANET_CATALOG.earth.orbitRadius
+  getOrbitAnchor(orbitAnchors, PLANET_CATALOG.earth.id).add(planet)
+  solarSystem.add(...Object.values(orbitAnchors))
   scene.add(solarSystem, stars)
 
-  return { scene, camera, renderer, controls, solarSystem, planet, stars }
+  return {
+    scene,
+    camera,
+    renderer,
+    controls,
+    solarSystem,
+    orbitAnchors,
+    planet,
+    stars,
+  }
 }
 
 export function disposeSpaceScene(
