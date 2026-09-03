@@ -12,8 +12,12 @@ export const DISPLAY_DISTANCE_SCALE = 1
 /**
  * 天体半径の表示スケール。
  * 単位: Three.js のシーン単位 / 論理上の半径単位
+ *
+ * 軌道半径は AU、天体半径は地球半径を論理単位にしているため、同じ
+ * スケールを使うと惑星の半径が軌道半径を上回る。惑星を軌道上に配置
+ * できるよう、半径は距離より小さい表示倍率にする。
  */
-export const DISPLAY_RADIUS_SCALE = 1
+export const DISPLAY_RADIUS_SCALE = 0.1
 
 /**
  * 時間の表示スケール。公転速度などのアニメーションに適用する。
