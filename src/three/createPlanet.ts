@@ -1,16 +1,14 @@
 import * as THREE from 'three/webgpu'
-import { DISPLAY_RADIUS_SCALE } from './displayScale'
+import type { PlanetData } from './planetCatalog'
 
-const PLANET_RADIUS = 1.35
-
-export function createPlanet(): THREE.Mesh<
+export function createPlanet(planet: PlanetData): THREE.Mesh<
   THREE.SphereGeometry,
   THREE.MeshBasicMaterial
 > {
   return new THREE.Mesh(
-    new THREE.SphereGeometry(PLANET_RADIUS * DISPLAY_RADIUS_SCALE, 64, 32),
+    new THREE.SphereGeometry(planet.displayRadius, 64, 32),
     new THREE.MeshBasicMaterial({
-      color: 0x38bdf8,
+      color: planet.color,
       wireframe: true,
       transparent: true,
       opacity: 0.75,
