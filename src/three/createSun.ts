@@ -6,6 +6,8 @@ import {
   smoothstep,
   triNoise3D,
   uniform,
+  uv,
+  vec2,
   vec3,
 } from 'three/tsl'
 import type { UniformNode } from 'three/webgpu'
@@ -22,6 +24,11 @@ const SUN_NOISE_SCALE = 0.8
 const SUN_DETAIL_NOISE_SCALE = 2.2
 const SUN_NOISE_SPEED = 0.12
 const SUN_DETAIL_NOISE_SPEED = 0.08
+const SUN_HALO_RADIUS_SCALE = 1.24
+const SUN_HALO_COLOR = 0xff9c4a
+const SUN_HALO_OPACITY = 0.9
+const SUN_HALO_INNER_RADIUS = 0.18
+const SUN_HALO_OUTER_RADIUS = 0.5
 
 export class SunMesh extends THREE.Mesh<
   THREE.SphereGeometry,
@@ -52,6 +59,7 @@ export class SunMesh extends THREE.Mesh<
 
     this.elapsedTime = elapsedTime
     this.name = 'sun'
+    this.add(createSunHalo())
   }
 
   /** 太陽表面のアニメーション時間を表示上の経過秒だけ進める。 */
@@ -63,6 +71,29 @@ export class SunMesh extends THREE.Mesh<
 /** 太陽系の中心に表示する、自己発光する太陽を生成する。 */
 export function createSun(): SunMesh {
   return new SunMesh()
+}
+
+/** 太陽本体を隠さず、外周だけに加算合成するハローを生成する。 */
+function createSunHalo(): THREE.Sprite {
+  const material = new THREE.SpriteNodeMaterial({
+    blending: THREE.AdditiveBlending,
+    depthTest: true,
+    depthWrite: false,
+    transparent: true,
+  })
+
+  material.colorNode = color(SUN_HALO_COLOR)
+  const distanceFromCenter = uv().sub(vec2(0.5)).length()
+  material.opacityNode = smoothstep(
+    SUN_HALO_OUTER_RADIUS,
+    SUN_HALO_INNER_RADIUS,
+    distanceFromCenter,
+  ).mul(SUN_HALO_OPACITY)
+
+  const halo = new THREE.Sprite(material)
+  halo.scale.setScalar(SUN_DISPLAY_RADIUS * SUN_HALO_RADIUS_SCALE * 2)
+  halo.name = 'sun-halo'
+  return halo
 }
 
 function createSunSurfaceNoise(elapsedTime: UniformNode<'float', number>) {
