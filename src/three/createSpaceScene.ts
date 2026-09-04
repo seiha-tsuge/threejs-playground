@@ -6,6 +6,7 @@ import {
   getOrbitAnchor,
   type OrbitAnchors,
 } from './createOrbitAnchors'
+import { createMercury } from './createMercury'
 import { createPlanet } from './createPlanet'
 import { createRenderer } from './createRenderer'
 import { createStars } from './createStars'
@@ -22,6 +23,7 @@ export interface SpaceScene {
   solarSystem: THREE.Group
   orbitAnchors: OrbitAnchors
   planet: THREE.Mesh<THREE.SphereGeometry, THREE.MeshStandardMaterial>
+  mercury: THREE.Mesh<THREE.SphereGeometry, THREE.MeshStandardNodeMaterial>
   sun: SunMesh
   sunLight: THREE.PointLight
   stars: THREE.Points<THREE.BufferGeometry, THREE.PointsMaterial>
@@ -35,12 +37,15 @@ export function createSpaceScene(container: HTMLElement): SpaceScene {
   const solarSystem = new THREE.Group()
   const orbitAnchors = createOrbitAnchors()
   const planet = createPlanet(PLANET_CATALOG.earth)
+  const mercury = createMercury(PLANET_CATALOG.mercury)
   const sun = createSun()
   const sunLight = createSunLight()
   const stars = createStars()
 
   planet.position.x = PLANET_CATALOG.earth.orbitRadius
+  mercury.position.x = PLANET_CATALOG.mercury.orbitRadius
   getOrbitAnchor(orbitAnchors, PLANET_CATALOG.earth.id).add(planet)
+  getOrbitAnchor(orbitAnchors, PLANET_CATALOG.mercury.id).add(mercury)
   sun.add(sunLight)
   solarSystem.add(sun)
   solarSystem.add(...Object.values(orbitAnchors))
@@ -54,6 +59,7 @@ export function createSpaceScene(container: HTMLElement): SpaceScene {
     solarSystem,
     orbitAnchors,
     planet,
+    mercury,
     sun,
     sunLight,
     stars,
