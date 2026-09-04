@@ -78,7 +78,11 @@ export function disposeSpaceScene(
 
 function disposeObjectResources(root: THREE.Object3D): void {
   root.traverse((object) => {
-    if (object instanceof THREE.Mesh || object instanceof THREE.Points) {
+    if (
+      object instanceof THREE.Mesh ||
+      object instanceof THREE.Points ||
+      object instanceof THREE.Sprite
+    ) {
       object.geometry.dispose()
       disposeMaterial(object.material)
     }
