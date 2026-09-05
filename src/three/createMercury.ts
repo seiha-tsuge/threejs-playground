@@ -15,7 +15,8 @@ const MERCURY_DARK_COLOR = 0x5b5148
 const MERCURY_CRATER_FLOOR_COLOR = 0x4a423b
 const MERCURY_CRATER_RIM_COLOR = 0xc3b6a5
 const MERCURY_ROUGHNESS = 0.96
-const MERCURY_ALBEDO_SCALE = 0.1
+// 太陽に近い軌道の強い照明でも、地表色とクレーターの明暗を残す。
+const MERCURY_ALBEDO_SCALE = 0.008
 const MERCURY_TERRAIN_SCALE = 2.8
 const MERCURY_CRATER_SCALE = 9
 const MERCURY_CRATER_JITTER = 0.82
@@ -38,10 +39,11 @@ export function createMercury(
 function createMercuryMaterial(
   displayRadius: number,
 ): THREE.MeshStandardNodeMaterial {
-  const material = new THREE.MeshStandardNodeMaterial({
+  const material = new THREE.MeshPhysicalNodeMaterial({
     color: MERCURY_BASE_COLOR,
     roughness: MERCURY_ROUGHNESS,
     metalness: 0,
+    specularIntensity: 0.02,
   })
   material.name = 'mercury-surface'
 
