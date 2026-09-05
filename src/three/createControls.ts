@@ -7,8 +7,8 @@ export function createControls(
 ): OrbitControls {
   const controls = new OrbitControls(camera, domElement)
   controls.enableDamping = true
-  controls.enablePan = false
-  controls.minDistance = 2.5
-  controls.maxDistance = 12
+  controls.enablePan = true
+  controls.minDistance = 0.12
+  controls.maxDistance = 160
   return controls
 }
