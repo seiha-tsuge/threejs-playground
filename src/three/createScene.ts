@@ -7,7 +7,7 @@ export function createScene(): THREE.Scene {
 }
 
 export function createCamera(): THREE.PerspectiveCamera {
-  const camera = new THREE.PerspectiveCamera(60, 1, 0.1, 100)
+  const camera = new THREE.PerspectiveCamera(60, 1, 0.001, 400)
   camera.position.set(0, 0.4, 5)
   return camera
 }
