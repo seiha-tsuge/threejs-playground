@@ -46,7 +46,7 @@ export function createSpaceScene(container: HTMLElement): SpaceScene {
   const stars = createStars()
 
   for (const data of PLANETS) {
-    const planet = createPlanet(data)
+    const planet = createPlanet(data, sunLight)
     planet.position.x = data.orbitRadius
     getOrbitAnchor(orbitAnchors, data.id).add(planet)
     planets[data.id] = planet
