@@ -1,15 +1,19 @@
 import * as THREE from 'three/webgpu'
 import type { PlanetData } from './planetCatalog'
+import { createMercury } from './createMercury'
+import { createPlanetMaterial } from './createPlanetMaterial'
 
 export function createPlanet(planet: PlanetData): THREE.Mesh<
   THREE.SphereGeometry,
-  THREE.MeshStandardMaterial
+  THREE.MeshStandardNodeMaterial
 > {
-  return new THREE.Mesh(
+  if (planet.id === 'mercury') return createMercury(planet)
+
+  const mesh = new THREE.Mesh(
     new THREE.SphereGeometry(planet.displayRadius, 64, 32),
-    new THREE.MeshStandardMaterial({
-      color: planet.color,
-      roughness: 0.85,
-    }),
+    createPlanetMaterial(planet),
   )
+  mesh.name = `${planet.id}-planet`
+  mesh.userData.planetId = planet.id
+  return mesh
 }

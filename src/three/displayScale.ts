@@ -6,8 +6,10 @@
 /**
  * 距離の表示スケール。
  * 単位: Three.js のシーン単位 / 論理上の距離単位
+ * 水星の軌道も太陽の表示半径（0.5）の外側に収まるようにする。
+ * 水星の内縁は 0.387 * 2 - 0.0383 = 0.7357 となる。
  */
-export const DISPLAY_DISTANCE_SCALE = 1
+export const DISPLAY_DISTANCE_SCALE = 2
 
 /**
  * 天体半径の表示スケール。

@@ -6,12 +6,14 @@ import {
   getOrbitAnchor,
   type OrbitAnchors,
 } from './createOrbitAnchors'
+import { createMoon, MOON_ORBIT_RADIUS, type MoonMesh } from './createMoon'
 import { createPlanet } from './createPlanet'
 import { createRenderer } from './createRenderer'
+import { createSatelliteAnchor } from './createSatelliteAnchor'
 import { createStars } from './createStars'
 import { createSun, type SunMesh } from './createSun'
 import { createSunLight } from './createSunLight'
-import { PLANET_CATALOG } from './planetCatalog'
+import { PLANETS, type PlanetId } from './planetCatalog'
 import type { OrbitControls } from 'three/addons/controls/OrbitControls.js'
 
 export interface SpaceScene {
@@ -21,7 +23,9 @@ export interface SpaceScene {
   controls: OrbitControls
   solarSystem: THREE.Group
   orbitAnchors: OrbitAnchors
-  planet: THREE.Mesh<THREE.SphereGeometry, THREE.MeshStandardMaterial>
+  planets: Record<PlanetId, ReturnType<typeof createPlanet>>
+  earthSatelliteAnchor: THREE.Group
+  moon: MoonMesh
   sun: SunMesh
   sunLight: THREE.PointLight
   stars: THREE.Points<THREE.BufferGeometry, THREE.PointsMaterial>
@@ -34,13 +38,21 @@ export function createSpaceScene(container: HTMLElement): SpaceScene {
   const controls = createControls(camera, renderer.domElement)
   const solarSystem = new THREE.Group()
   const orbitAnchors = createOrbitAnchors()
-  const planet = createPlanet(PLANET_CATALOG.earth)
+  const planets = {} as Record<PlanetId, ReturnType<typeof createPlanet>>
+  const earthSatelliteAnchor = createSatelliteAnchor(MOON_ORBIT_RADIUS)
+  const moon = createMoon()
   const sun = createSun()
   const sunLight = createSunLight()
   const stars = createStars()
 
-  planet.position.x = PLANET_CATALOG.earth.orbitRadius
-  getOrbitAnchor(orbitAnchors, PLANET_CATALOG.earth.id).add(planet)
+  for (const data of PLANETS) {
+    const planet = createPlanet(data)
+    planet.position.x = data.orbitRadius
+    getOrbitAnchor(orbitAnchors, data.id).add(planet)
+    planets[data.id] = planet
+  }
+  earthSatelliteAnchor.add(moon)
+  planets.earth.add(earthSatelliteAnchor)
   sun.add(sunLight)
   solarSystem.add(sun)
   solarSystem.add(...Object.values(orbitAnchors))
@@ -53,7 +65,9 @@ export function createSpaceScene(container: HTMLElement): SpaceScene {
     controls,
     solarSystem,
     orbitAnchors,
-    planet,
+    planets,
+    earthSatelliteAnchor,
+    moon,
     sun,
     sunLight,
     stars,
