@@ -4,7 +4,7 @@ import { createEarthClouds } from './createEarthClouds'
 import { createMercury } from './createMercury'
 import { createPlanetMaterial } from './createPlanetMaterial'
 
-export function createPlanet(planet: PlanetData): THREE.Mesh<
+export function createPlanet(planet: PlanetData, sunLight: THREE.PointLight): THREE.Mesh<
   THREE.SphereGeometry,
   THREE.MeshStandardNodeMaterial
 > {
@@ -12,7 +12,7 @@ export function createPlanet(planet: PlanetData): THREE.Mesh<
 
   const mesh = new THREE.Mesh(
     new THREE.SphereGeometry(planet.displayRadius, 64, 32),
-    createPlanetMaterial(planet),
+    createPlanetMaterial(planet, sunLight),
   )
   mesh.name = `${planet.id}-planet`
   mesh.userData.planetId = planet.id

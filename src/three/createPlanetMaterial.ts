@@ -1,10 +1,22 @@
 import * as THREE from 'three/webgpu'
-import { color, mix, mx_noise_float, positionLocal, smoothstep } from 'three/tsl'
+import {
+  color,
+  lightPosition,
+  mix,
+  mx_noise_float,
+  normalWorld,
+  positionLocal,
+  positionWorld,
+  smoothstep,
+} from 'three/tsl'
 import { DISPLAY_DISTANCE_SCALE } from './displayScale'
 import type { PlanetData } from './planetCatalog'
 
 /** 球面上の3Dノイズを使い、経度の継ぎ目がない静的な模様を作る。 */
-export function createPlanetMaterial(planet: PlanetData): THREE.MeshPhysicalNodeMaterial {
+export function createPlanetMaterial(
+  planet: PlanetData,
+  sunLight: THREE.PointLight,
+): THREE.MeshPhysicalNodeMaterial {
   const material = new THREE.MeshPhysicalNodeMaterial({
     roughness: 0.9,
     metalness: 0,
@@ -37,6 +49,17 @@ export function createPlanetMaterial(planet: PlanetData): THREE.MeshPhysicalNode
       const ice = smoothstep(0.91, 0.97, latitude.add(detail.sub(0.5).mul(0.06)))
       surface = mix(mix(ocean, land, landMask), color(0xeaf4f4), ice)
       material.roughnessNode = mix(0.45, 0.95, landMask.max(ice))
+
+      // 地表と同じ陸地・氷マスクを使い、模式的な都市群を海岸寄りに配置する。
+      const settlements = smoothstep(0.48, 0.64, mx_noise_float(p.mul(18), 0.5, 0.5))
+      const cityPoints = smoothstep(0.6, 0.72, mx_noise_float(p.mul(150), 0.5, 0.5))
+      const coastalDensity = mix(1, 0.25, smoothstep(0.54, 0.65, elevation))
+      const cityMask = cityPoints.mul(settlements).mul(coastalDensity)
+        .mul(landMask).mul(ice.oneMinus())
+      // ワールド座標で判定するため、地球・太陽や親グループの移動にも追従する。
+      const toSun = lightPosition(sunLight).sub(positionWorld).normalize()
+      const nightMask = smoothstep(-0.2, 0.02, normalWorld.dot(toSun)).oneMinus()
+      material.emissiveNode = color(0xffc879).mul(cityMask).mul(nightMask).mul(4)
       break
     }
     case 'mars': {
