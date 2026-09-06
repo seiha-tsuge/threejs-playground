@@ -1,5 +1,6 @@
 import type { SpaceScene } from './createSpaceScene'
 import { DISPLAY_TIME_SCALE } from './displayScale'
+import { PLANETS } from './planetCatalog'
 
 const STARS_ROTATION_SPEED_Y = 0.00015
 const STARS_ROTATION_SPEED_X = 0.00004
@@ -16,6 +17,7 @@ export function createSceneAnimation({
   camera,
   renderer,
   controls,
+  orbitAnchors,
   stars,
   sun,
 }: SpaceScene): () => void {
@@ -28,6 +30,10 @@ export function createSceneAnimation({
     const deltaSeconds = Math.min(Math.max(rawDeltaSeconds, 0), MAX_DELTA_SECONDS)
     const elapsedDisplaySeconds = deltaSeconds * DISPLAY_TIME_SCALE
 
+    for (const planet of PLANETS) {
+      orbitAnchors[planet.id].rotation.y +=
+        planet.orbitSpeed * elapsedDisplaySeconds
+    }
     sun.advanceTime(elapsedDisplaySeconds)
     stars.rotation.y +=
       STARS_ROTATION_SPEED_Y_PER_SECOND * elapsedDisplaySeconds
