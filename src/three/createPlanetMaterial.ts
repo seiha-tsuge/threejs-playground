@@ -30,7 +30,7 @@ export function createPlanetMaterial(planet: PlanetData): THREE.MeshPhysicalNode
       const elevation = terrain.add(detail.sub(0.5).mul(0.13))
       const landMask = smoothstep(0.51, 0.535, elevation)
       const desert = smoothstep(0.25, 0.4, latitude)
-        .mul(smoothstep(0.65, 0.45, latitude))
+        .mul(smoothstep(0.45, 0.65, latitude).oneMinus())
         .mul(smoothstep(0.4, 0.65, terrain))
       const land = mix(color(0x38734a), color(0xc5ad70), desert)
       const ocean = mix(color(0x082d75), color(0x177eac), smoothstep(0.46, 0.53, elevation))
