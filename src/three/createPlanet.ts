@@ -1,5 +1,6 @@
 import * as THREE from 'three/webgpu'
 import type { PlanetData } from './planetCatalog'
+import { createEarthClouds } from './createEarthClouds'
 import { createMercury } from './createMercury'
 import { createPlanetMaterial } from './createPlanetMaterial'
 
@@ -15,5 +16,10 @@ export function createPlanet(planet: PlanetData): THREE.Mesh<
   )
   mesh.name = `${planet.id}-planet`
   mesh.userData.planetId = planet.id
+
+  if (planet.id === 'earth') {
+    mesh.add(createEarthClouds(planet.displayRadius))
+  }
+
   return mesh
 }
